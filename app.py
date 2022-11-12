@@ -35,6 +35,14 @@ def bucket_done():
 
     return jsonify({'msg': '버킷 완료!'})
 
+@app.route("/bucket/undone", methods=["POST"])
+def bucket_undone():
+    num_receive = request.form['num_give']
+
+    db.bucket.update_one({'num': int(num_receive)}, {'$set': {'done': 0}})
+
+    return jsonify({'msg': '버킷 취소!'})
+
 @app.route("/bucket", methods=["GET"])
 def bucket_get():
     bucket_list = list(db.bucket.find({}, {'_id': False}))
