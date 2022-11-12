@@ -81,6 +81,7 @@
         .mybox > li > h2.done {
             text-decoration: line-through
         }
+
     </style>
     <script>
         $(document).ready(function () {
@@ -103,6 +104,7 @@
                         if (done === 0) {
                             temp_html = `<li>
                                             <h2>✅ ${bucket}</h2>
+                                            <button onclick="change_input(${num})" style="margin-right: 5px" type="button" class="btn btn-outline-secondary">수정하기!</button>
                                             <button onclick="done_bucket(${num})" type="button" class="btn btn-outline-primary">완료!</button>
                                         </li>`
                         } else {
@@ -154,6 +156,29 @@
                 }
             });
         }
+
+        function change_input(num) {
+            $('.mybucket').empty();
+            let temp_html = `
+                             <input id="bucketChange" class="form-control" type="text" placeholder="여기서 수정하세용">
+                             <button onclick="update_bucket(${num})" type="button" class="btn btn-outline-success">수정하기</button>
+                            `
+            $('.mybucket').append(temp_html)
+        }
+
+        function update_bucket(num) {
+            let newBuket = $('#bucketChange').val();
+            $.ajax({
+                type: "POST",
+                url: "/bucket/update",
+                data: {num_give: num, bucketChange_give: newBuket},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
+                }
+            });
+        }
+
     </script>
 </head>
 <body>
@@ -162,6 +187,7 @@
 </div>
 <div class="mybox">
     <div class="mybucket">
+<!--        <input id="bucketChange" class="form-control" type="text" placeholder="이루고 싶은 것을 입력하세요">-->
         <input id="bucket" class="form-control" type="text" placeholder="이루고 싶은 것을 입력하세요">
         <button onclick="save_bucket()" type="button" class="btn btn-outline-primary">기록하기</button>
     </div>
